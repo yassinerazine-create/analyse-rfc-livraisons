@@ -1,5 +1,13 @@
 import streamlit as st
 #from views import chargement, vue_ensemble, livraisons, rfc, composants, incoherences, umep
+import views.chargement as chargement
+import views.vue_ensemble as vue_ensemble
+import views.livraisons as livraisons
+import views.rfc as rfc
+import views.composants as composants
+import views.incoherences as incoherences
+import views.umep as umep
+
 
 # Initialisation de la session
 if "authenticated" not in st.session_state:
@@ -53,7 +61,7 @@ else:
 # ROUTER DES PAGES
 # ==========================
 
-    if views == "Chargement":
+    if page == "Chargement":
         chargement.show()
 
     elif page == "Vue d'ensemble":
