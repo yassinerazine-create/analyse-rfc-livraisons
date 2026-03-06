@@ -45,6 +45,6 @@ elif page == "RFC":
 elif page == "Composants":
     composants.show()
 elif page == "Incohérences":
-    incoherences.show()
+    incoherences.show(st.session_state.df)
 elif page == "UMEP":
     umep.show()
