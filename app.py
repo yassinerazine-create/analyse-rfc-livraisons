@@ -36,15 +36,22 @@ page = st.sidebar.radio(
 # -------------------------
 if page == "Chargement des données":
     chargement.show()
+
 elif page == "Vue d'ensemble":
-    vue_ensemble.show()
+    vue_ensemble.show(st.session_state.df)
+
 elif page == "Livraisons":
-    livraisons.show()
+    livraisons.show(st.session_state.df)
+
 elif page == "RFC":
-    rfc.show()
+    rfc.show(st.session_state.df)
+
 elif page == "Composants":
-    composants.show()
+    composants.show(st.session_state.df)
+
 elif page == "Incohérences":
     incoherences.show(st.session_state.df)
+
 elif page == "UMEP":
-    umep.show()
+    umep.show(st.session_state.df)
+
