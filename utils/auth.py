@@ -7,10 +7,10 @@ users = {
 
 def login():
 
-    st.title("Authentification")
+    st.title("Authentification :")
 
     username = st.text_input("Utilisateur :")
-    password = st.text_input("Mot de passe", type="password")
+    password = st.text_input("Mot de passe :", type="password")
 
     if st.button("Connexion"):
 
