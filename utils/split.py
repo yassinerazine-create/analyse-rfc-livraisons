@@ -1,20 +1,18 @@
+# utils/split.py
 import pandas as pd
 
 def split_composant_version(df):
     """
-    Crée deux colonnes : Composant et Version à partir de Composant_Version
+    Scinde Composant_Version en Composant et Version
     """
     def extract(val):
         val = str(val)
-
-        # Séparer la partie version si ':' présent
         if ':' in val:
             composant_part, version_part = val.split(':', 1)
         else:
             composant_part = val
             version_part = ''
 
-        # Si composant_part contient '_', séparer au premier '_'
         if '_' in composant_part:
             first_underscore = composant_part.find('_')
             composant = composant_part[:first_underscore]
@@ -23,7 +21,6 @@ def split_composant_version(df):
             composant = composant_part
             version = version_part
 
-        # Si version_part existe, on le remplace par la version après ':'
         if version_part:
             version = version_part
 
