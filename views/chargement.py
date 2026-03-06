@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+from utils.clean import filter_columns
+
+
 
 def show():
     st.title("Chargement des données")
@@ -27,7 +30,7 @@ def show():
         # garder uniquement les colonnes essentielles
         df = filter_columns(df)
 
-        
+
         st.session_state["data"] = df
         st.success("Données chargées")
         st.dataframe(df)
