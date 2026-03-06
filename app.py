@@ -46,6 +46,31 @@ else:
     )
 
 
+# ==========================
+# ROUTER DES PAGES
+# ==========================
+
+if page == "Chargement des données":
+    chargement.show()
+
+elif page == "Vue d'ensemble":
+    vue_ensemble.show()
+
+elif page == "Livraisons":
+    livraisons.show()
+
+elif page == "RFC":
+    rfc.show()
+
+elif page == "Composants":
+    composants.show()
+
+elif page == "Incohérences":
+    incoherences.show()
+
+elif page == "UMEP":
+    umep.show()
+
 
 # LOGOUT
 if st.sidebar.button("Déconnexion"):
