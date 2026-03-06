@@ -1,15 +1,10 @@
 import streamlit as st
 import pandas as pd
 
-
 def filter_by_week(df):
-
     df = df.copy()
 
-    # conversion en numérique, ignorer les valeurs non convertibles
-    df["Semaine cible"] = pd.to_numeric(df["Semaine cible"], errors="coerce")
-
-    # garder uniquement les semaines valides
+    # Semaine cible déjà convertie en int dans clean.py
     weeks = sorted(df["Semaine cible"].dropna().astype(int).unique())
 
     if not weeks:
