@@ -1,43 +1,57 @@
 import pandas as pd
-from .split import split_composant_version
+import re
 
-def reorder_columns(df):
-    """
-    Réorganise les colonnes dans l'ordre désiré
-    """
-    desired_order = [
+
+def split_composant_version(value):
+
+    value = str(value)
+
+    # cas ECHANGES
+    if value.startswith("ECHANGES"):
+
+        match = re.search(r"(\d+\.\d+(\.\d+)?(:\d+)?)", value)
+
+        if match:
+            return "ECHANGES", match.group(0)
+
+    # cas standard composant:version
+    if ":" in value:
+
+        comp, ver = value.split(":", 1)
+
+        return comp, ver
+
+    # cas composant_version
+    if "_" in value:
+
+        comp, ver = value.split("_", 1)
+
+        return comp, ver
+
+    return value, ""
+
+
+def filter_split_and_reorder(df):
+
+    df = df.copy()
+
+    df = df.rename(columns={
+        "Label Livraison affecté": "Label"
+    })
+
+    split = df["Composant_Version"].apply(split_composant_version)
+
+    df["Composant"] = split.apply(lambda x: x[0])
+    df["Version"] = split.apply(lambda x: x[1])
+
+    df = df[[
         "Semaine cible",
         "Composant",
         "Version",
         "UMEP",
         "RFC",
-        "Label Livraison affecté",
+        "Label",
         "Composant_Version"
-    ]
-    # garder uniquement les colonnes existantes
-    cols = [c for c in desired_order if c in df.columns]
-    return df[cols]
-
-def filter_split_and_reorder(df):
-    """
-    1️⃣ garde les colonnes essentielles
-    2️⃣ scinde Composant_Version en Composant / Version
-    3️⃣ réorganise les colonnes
-    """
-    # Colonnes à garder
-    essential_cols = ["Composant_Version", "RFC", "UMEP", "Semaine cible", "Label Livraison affecté"]
-    df = df[[c for c in essential_cols if c in df.columns]]
-
-    # Split composant/version
-    df = split_composant_version(df)
-
-    # Réordonner les colonnes
-    df = reorder_columns(df)
+    ]]
 
     return df
-
-def filter_columns(df):
-    """
-    Filtrage simple pour compatibilité ancienne version
-    """
-    return filter_split_and_reorder(df)
