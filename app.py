@@ -1,4 +1,5 @@
 import streamlit as st
+from views import chargement, vue_ensemble, livraisons, rfc, composants, incoherences, umep
 
 # Initialisation de la session
 if "authenticated" not in st.session_state:
