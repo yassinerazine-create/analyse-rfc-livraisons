@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Import des pages
+# Import des views
 from views import chargement, vue_ensemble, livraisons, rfc, composants, incoherences, umep
 
 
@@ -16,31 +16,30 @@ if "user" not in st.session_state:
 
 
 # ==========================
-# LOGIN
+# PAGE LOGIN
 # ==========================
 
 def login():
 
     st.title("Connexion")
 
-    with st.form("login_form"):
-        username = st.text_input("Nom d'utilisateur")
-        password = st.text_input("Mot de passe", type="password")
+    username = st.text_input("Nom d'utilisateur")
+    password = st.text_input("Mot de passe", type="password")
 
-        submit = st.form_submit_button("Se connecter")
+    if st.button("Se connecter"):
 
-        if submit:
-            if username == "admin" and password == "admin":
-                st.session_state.authenticated = True
-                st.session_state.user = username
-                st.success("Connexion réussie")
-                st.rerun()
-            else:
-                st.error("Identifiants incorrects")
+        if username == "admin" and password == "admin":
+            st.session_state.authenticated = True
+            st.session_state.user = username
+            st.success("Connexion réussie")
+            st.rerun()
+
+        else:
+            st.error("Identifiants incorrects")
 
 
 # ==========================
-# SI NON CONNECTÉ
+# SI PAS CONNECTÉ
 # ==========================
 
 if not st.session_state.authenticated:
@@ -80,7 +79,7 @@ page = st.sidebar.radio(
 
 
 # ==========================
-# ROUTER
+# ROUTER DES PAGES
 # ==========================
 
 if page == "Chargement des données":
