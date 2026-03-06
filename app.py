@@ -53,7 +53,7 @@ else:
 # ROUTER DES PAGES
 # ==========================
 
-    if page == "Chargement":
+    if views == "Chargement":
         chargement.show()
 
     elif page == "Vue d'ensemble":
