@@ -1,29 +1,16 @@
 import streamlit as st
-from utils.loader import load_file
+import pandas as pd
 
+def show():
+    st.title("Chargement des données")
 
-if "authenticated" not in st.session_state or not st.session_state.authenticated:
-    st.warning("Veuillez vous connecter.")
-    st.stop()
+    uploaded_file = st.file_uploader("Importer Excel ou CSV", type=["xlsx", "csv"])
+    if uploaded_file:
+        if uploaded_file.name.endswith(".csv"):
+            df = pd.read_csv(uploaded_file)
+        else:
+            df = pd.read_excel(uploaded_file)
 
-    
-st.title("Chargement de données")
-
-file = st.file_uploader("Importer fichier", type=["xlsx","csv"])
-
-if file:
-
-    df = load_file(file)
-
-    st.session_state["data"] = df
-
-    st.success("Données chargées")
-
-    st.dataframe(df)
-
-    col1,col2,col3,col4 = st.columns(4)
-
-    col1.metric("Changements", df["RFC"].nunique())
-    col2.metric("Composants", df["Composant_Version"].nunique())
-    col3.metric("Livraisons", df["Label Livraison affecté"].nunique())
-    col4.metric("UMEP", df["UMEP"].nunique())
+        st.session_state["data"] = df
+        st.success(f"Données chargées : {df.shape[0]} lignes, {df.shape[1]} colonnes")
+        st.dataframe(df)

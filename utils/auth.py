@@ -1,34 +1,22 @@
 import streamlit as st
 
-users = {
-    "admin": {
-        "password": "admin123",
-        "role": "admin"
-    },
-    "user": {
-        "password": "user123",
-        "role": "viewer"
-    }
+# dictionnaire simple d'utilisateurs
+USERS = {
+    "admin": "admin",
+    "user": "user"
 }
 
-
 def login():
-
     st.title("Connexion")
-
-    username = st.text_input("Utilisateur")
+    
+    username = st.text_input("Nom d'utilisateur")
     password = st.text_input("Mot de passe", type="password")
-
-    if st.button("Connexion"):
-
-        if username in users and users[username]["password"] == password:
-
+    
+    if st.button("Se connecter"):
+        if username in USERS and password == USERS[username]:
             st.session_state.authenticated = True
             st.session_state.user = username
-            st.session_state.role = users[username]["role"]
-
-            st.success("Connexion réussie")
-            st.rerun()
-
+            st.success(f"Bienvenue {username} !")
+            st.experimental_rerun()
         else:
             st.error("Identifiants incorrects")

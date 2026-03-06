@@ -1,20 +1,18 @@
 import streamlit as st
-from utils.analytics import composants_multi_rfc
+import pandas as pd
 
-if "authenticated" not in st.session_state or not st.session_state.authenticated:
-    st.warning("Veuillez vous connecter.")
-    st.stop()
+def show():
+    st.title("Détection des incohérences")
 
-st.title("Détection d'incohérences")
+    if "data" not in st.session_state:
+        st.warning("Veuillez d'abord charger les données")
+        return
 
-if "data" not in st.session_state:
-    st.warning("Veuillez charger les données")
-    st.stop()
+    df = st.session_state["data"]
 
-df = st.session_state.data
+    # exemple de détection : Composant_Version avec plusieurs RFC
+    result = df.groupby("Composant_Version")["RFC"].nunique().reset_index()
+    result = result[result["RFC"] > 1]
 
-st.subheader("Composants présents dans plusieurs RFC")
-
-result = composants_multi_rfc(df)
-
-st.dataframe(result)
+    st.write("Composants présents dans plusieurs RFC :")
+    st.dataframe(result)
