@@ -35,9 +35,9 @@ else:
     page = st.sidebar.radio(
         "Navigation",
         [
+            "Chargement de données",
             "Vue d'ensemble",
-            "Chargement",
-            "Livraisons",
+            "Vue par Livraisons",
             "RFC",
             "Composants",
             "Incohérences",
