@@ -14,15 +14,22 @@ def style_version(row):
     return styles
 
 def format_versions_and_weeks(df):
+    """Convertir semaines en entier et ajouter flèches pour versions"""
     df = df.copy()
-    # convertir semaines en entier
+
+    # convertir semaines uniquement si les colonnes existent
     for col in ["Semaine A", "Semaine B"]:
         if col in df.columns:
-            df[col] = df[col].apply(lambda x: int(x) if pd.notna(x) else x)
-    # ajouter flèches aux versions
-    df["Version A"] = df["Version A"].apply(lambda v: f"⬇ {v}")
-    df["Version B"] = df["Version B"].apply(lambda v: f"⬆ {v}")
+            df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
+
+    # ajouter flèches aux versions si les colonnes existent
+    if "Version A" in df.columns:
+        df["Version A"] = df["Version A"].apply(lambda v: f"⬇ {v}")
+    if "Version B" in df.columns:
+        df["Version B"] = df["Version B"].apply(lambda v: f"⬆ {v}")
+
     return df
+
 
 def show(df):
     st.title("Détection des incohérences")
