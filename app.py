@@ -32,6 +32,7 @@ if not st.session_state.authenticated:
 # Si connecté
 else:
     
+
     st.sidebar.success("Connecté")
 
     page = st.sidebar.radio(
@@ -51,7 +52,6 @@ else:
 # ==========================
 # ROUTER DES PAGES
 # ==========================
-    from views import chargement, vue_ensemble, livraisons, rfc, composants, incoherences, umep
 
     if page == "Chargement":
         chargement.show()
