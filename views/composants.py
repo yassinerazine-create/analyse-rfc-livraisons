@@ -7,5 +7,5 @@ def show():
         return
 
     df = st.session_state.data
-    comp = st.selectbox("Choisir composant", df["Composant_Version"].unique())
+    comp = st.selectbox("Choisir composant", df["Composant"].unique())
     st.dataframe(df[df["Composant_Version"] == comp])
