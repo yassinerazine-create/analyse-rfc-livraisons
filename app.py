@@ -1,88 +1,48 @@
 import streamlit as st
 
-# imports des modules
-import views.chargement as chargement
-import views.incoherences as incoherences
-import views.vue_ensemble as vue_ensemble
-import views.livraisons as livraisons
-import views.rfc as rfc
-import views.composants as composants
-import views.umep as umep
-
-from utils.auth import login
-
-
-# configuration de la page
-st.set_page_config(
-    page_title="Analyse RFC / Livraisons",
-    layout="wide"
-)
-
-
-# initialisation session
+# Initialisation de la session
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 
-# ==========================
-# AUTHENTIFICATION
-# ==========================
+# Fonction de connexion
+def login():
+    st.title("Connexion")
 
+    with st.form("login_form"):
+        username = st.text_input("Nom d'utilisateur")
+        password = st.text_input("Mot de passe", type="password")
+
+        submit = st.form_submit_button("Se connecter")
+
+        if submit:
+            if username == "admin" and password == "admin":
+                st.session_state.authenticated = True
+                st.success("Connexion réussie")
+                st.rerun()
+            else:
+                st.error("Identifiants incorrects")
+
+
+# Si NON connecté
 if not st.session_state.authenticated:
     login()
-    st.stop()
 
+# Si connecté
+else:
+    st.sidebar.success("Connecté")
 
-# ==========================
-# SIDEBAR
-# ==========================
+    page = st.sidebar.radio(
+        "Navigation",
+        [
+            "Vue d'ensemble",
+            "Chargement",
+            "Livraisons",
+            "RFC",
+            "Composants",
+            "Incohérences",
+            "UMEP"
+        ]
+    )
 
-st.sidebar.title("Navigation")
-
-menu = st.sidebar.radio(
-    "Choisir une vue",
-    [
-        "Chargement des données",
-        "Détection incohérences",
-        "Vue d'ensemble",
-        "Vue livraisons",
-        "Vue RFC",
-        "Vue composants",
-        "Vue UMEP"
-    ]
-)
-
-
-# bouton logout
-if st.sidebar.button("Déconnexion"):
-    st.session_state.authenticated = False
-    st.rerun()
-
-
-st.sidebar.success(f"Connecté : {st.session_state.user}")
-
-
-# ==========================
-# ROUTER DES PAGES
-# ==========================
-
-if menu == "Chargement des données":
-    chargement.show()
-
-elif menu == "Détection incohérences":
-    incoherences.show()
-
-elif menu == "Vue d'ensemble":
-    vue_ensemble.show()
-
-elif menu == "Vue livraisons":
-    livraisons.show()
-
-elif menu == "Vue RFC":
-    rfc.show()
-
-elif menu == "Vue composants":
-    composants.show()
-
-elif menu == "Vue UMEP":
-    umep.show()
+    st.title(page)
