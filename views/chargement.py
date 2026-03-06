@@ -2,9 +2,7 @@ import streamlit as st
 import pandas as pd
 from utils.clean import filter_split_and_reorder
 
-
 def show():
-
     st.title("Chargement des données")
 
     file = st.file_uploader(
@@ -13,7 +11,6 @@ def show():
     )
 
     if file:
-
         if file.name.endswith(".csv"):
             df = pd.read_csv(file)
         else:
@@ -24,10 +21,5 @@ def show():
         st.session_state.df = df
 
         st.success("Données chargées")
-
         st.write("Nombre de lignes :", len(df))
-
         st.dataframe(df.head(100), use_container_width=True)
-        st.write("Aperçu de la colonne 'Semaine cible'")
-        st.write(df["Semaine cible"].unique())
-
