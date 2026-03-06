@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from utils.versioning import version_to_tuple
 
 def filter_by_week(df):
     df = df.copy()
@@ -18,3 +19,19 @@ def filter_by_week(df):
     )
 
     return df[df["Semaine cible"].isin(selected_weeks)]
+
+
+def keep_highest_version_per_rfc_composant(df):
+    """
+    Pour chaque RFC + Composant, garder seulement la ligne avec la version la plus haute
+    """
+    df = df.copy()
+    df["v_tuple"] = df["Version"].apply(version_to_tuple)
+
+    # garder la ligne avec la version max pour chaque RFC+Composant
+    df_max = df.loc[df.groupby(["RFC", "Composant"])["v_tuple"].idxmax()]
+
+    # supprimer colonne temporaire
+    df_max = df_max.drop(columns=["v_tuple"])
+
+    return df_max
