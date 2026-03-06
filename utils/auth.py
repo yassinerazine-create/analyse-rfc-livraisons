@@ -1,20 +1,22 @@
 import streamlit as st
 
 users = {
-    "admin": "admin123"
+    "admin": "admin123",
+    "user": "user123"
 }
 
 def login():
 
-    st.title("Connexion")
+    st.title("Authentification")
 
-    user = st.text_input("Utilisateur")
+    username = st.text_input("Utilisateur")
     password = st.text_input("Mot de passe", type="password")
 
-    if st.button("Se connecter"):
+    if st.button("Connexion"):
 
-        if user in users and users[user] == password:
+        if username in users and users[username] == password:
             st.session_state.authenticated = True
+            st.success("Connexion réussie")
             st.rerun()
 
         else:

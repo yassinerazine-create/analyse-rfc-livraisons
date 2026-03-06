@@ -11,17 +11,17 @@ if "authenticated" not in st.session_state:
 
 if not st.session_state.authenticated:
     login()
-else:
+    st.stop()
 
-    st.sidebar.success("Utilisateur connecté")
+st.sidebar.success("Utilisateur connecté")
 
-    st.title("Analyse des adhérences RFC / Livraisons")
+st.title("Analyse des adhérences RFC / Livraisons")
 
-    st.markdown("""
-    Application d'analyse des dépendances entre :
+st.markdown("""
+Application permettant d'analyser les dépendances entre :
 
-    - RFC
-    - Composants
-    - Livraisons
-    - UMEP
-    """)
+- RFC
+- Composants
+- Livraisons
+- UMEP
+""")
