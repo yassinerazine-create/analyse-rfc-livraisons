@@ -1,9 +1,16 @@
 import streamlit as st
 
 users = {
-    "admin": "admin123",
-    "user": "user123"
+    "admin": {
+        "password": "admin123",
+        "role": "admin"
+    },
+    "user": {
+        "password": "user123",
+        "role": "viewer"
+    }
 }
+
 
 def login():
 
@@ -12,10 +19,14 @@ def login():
     username = st.text_input("Utilisateur")
     password = st.text_input("Mot de passe", type="password")
 
-    if st.button("Se connecter"):
+    if st.button("Connexion"):
 
-        if username in users and users[username] == password:
+        if username in users and users[username]["password"] == password:
+
             st.session_state.authenticated = True
+            st.session_state.user = username
+            st.session_state.role = users[username]["role"]
+
             st.success("Connexion réussie")
             st.rerun()
 
