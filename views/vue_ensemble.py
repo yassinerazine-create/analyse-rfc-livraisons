@@ -4,7 +4,7 @@ from utils.clean import filter_split_and_reorder
 
 def show():
     st.title("Vue d'ensemble")
-    st.dataframe(df)
+
     if "data" not in st.session_state:
         st.warning("Veuillez charger les données")
         return
