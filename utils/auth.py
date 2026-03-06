@@ -9,7 +9,7 @@ def login():
 
     st.title("Authentification")
 
-    username = st.text_input("Utilisateur")
+    username = st.text_input("Utilisateur :")
     password = st.text_input("Mot de passe", type="password")
 
     if st.button("Connexion"):
