@@ -4,13 +4,13 @@ import pandas as pd
 def show():
     st.title("Chargement des données")
 
-    uploaded_file = st.file_uploader("Importer Excel ou CSV", type=["xlsx", "csv"])
-    if uploaded_file:
-        if uploaded_file.name.endswith(".csv"):
-            df = pd.read_csv(uploaded_file)
+    file = st.file_uploader("Importer fichier", type=["csv","xlsx"])
+    if file:
+        if file.name.endswith("csv"):
+            df = pd.read_csv(file)
         else:
-            df = pd.read_excel(uploaded_file)
+            df = pd.read_excel(file)
 
         st.session_state["data"] = df
-        st.success(f"Données chargées : {df.shape[0]} lignes, {df.shape[1]} colonnes")
+        st.success("Données chargées")
         st.dataframe(df)

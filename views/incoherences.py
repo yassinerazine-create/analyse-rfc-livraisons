@@ -1,18 +1,12 @@
 import streamlit as st
-import pandas as pd
 
 def show():
-    st.title("Détection des incohérences")
-
+    st.title("Détection d'incohérences")
     if "data" not in st.session_state:
-        st.warning("Veuillez d'abord charger les données")
+        st.warning("Veuillez charger les données")
         return
 
-    df = st.session_state["data"]
-
-    # exemple de détection : Composant_Version avec plusieurs RFC
+    df = st.session_state.data
     result = df.groupby("Composant_Version")["RFC"].nunique().reset_index()
     result = result[result["RFC"] > 1]
-
-    st.write("Composants présents dans plusieurs RFC :")
     st.dataframe(result)

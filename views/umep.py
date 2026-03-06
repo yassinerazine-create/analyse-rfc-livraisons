@@ -1,17 +1,11 @@
 import streamlit as st
 
+def show():
+    st.title("Vue par UMEP")
+    if "data" not in st.session_state:
+        st.warning("Veuillez charger les données")
+        return
 
-if "authenticated" not in st.session_state or not st.session_state.authenticated:
-    st.warning("Veuillez vous connecter.")
-    st.stop()
-
-    
-st.title("Vue par UMEP")
-
-df = st.session_state.data
-
-umep = st.selectbox("Choisir UMEP", df["UMEP"].unique())
-
-filtered = df[df["UMEP"] == umep]
-
-st.dataframe(filtered)
+    df = st.session_state.data
+    umep = st.selectbox("Choisir UMEP", df["UMEP"].unique())
+    st.dataframe(df[df["UMEP"] == umep])

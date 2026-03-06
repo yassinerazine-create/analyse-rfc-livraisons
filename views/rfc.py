@@ -1,17 +1,11 @@
 import streamlit as st
 
+def show():
+    st.title("Vue par RFC")
+    if "data" not in st.session_state:
+        st.warning("Veuillez charger les données")
+        return
 
-if "authenticated" not in st.session_state or not st.session_state.authenticated:
-    st.warning("Veuillez vous connecter.")
-    st.stop()
-
-    
-st.title("Vue par RFC")
-
-df = st.session_state.data
-
-rfc = st.selectbox("Choisir RFC", df["RFC"].unique())
-
-filtered = df[df["RFC"] == rfc]
-
-st.dataframe(filtered)
+    df = st.session_state.data
+    rfc = st.selectbox("Choisir RFC", df["RFC"].unique())
+    st.dataframe(df[df["RFC"] == rfc])
