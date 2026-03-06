@@ -53,8 +53,7 @@ else:
 if page == "Chargement des données":
     chargement.show()
 
-elif page == "Vue d'ensemble":
-    vue_ensemble.show()
+
 
 elif page == "Livraisons":
     livraisons.show()
