@@ -26,7 +26,7 @@ if "user" not in st.session_state:
 # -------------------------
 if not st.session_state.authenticated:
     login()
-    #st.stop()
+    st.stop()
 
 # -------------------------
 # SIDEBAR
