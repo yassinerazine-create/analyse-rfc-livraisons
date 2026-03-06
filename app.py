@@ -45,9 +45,13 @@ else:
         ]
     )
 
-    st.title(page)
+
 
 # LOGOUT
 if st.sidebar.button("Déconnexion"):
     st.session_state.authenticated = False
     st.rerun()
+
+
+    st.title(page)
+
