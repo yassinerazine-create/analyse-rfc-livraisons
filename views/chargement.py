@@ -24,6 +24,10 @@ def show():
         else:
             st.warning("Colonne 'RFC' non trouvée dans le fichier")
 
+        # garder uniquement les colonnes essentielles
+        df = filter_columns(df)
+
+        
         st.session_state["data"] = df
         st.success("Données chargées")
         st.dataframe(df)
