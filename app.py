@@ -37,11 +37,11 @@ else:
         [
             "Chargement de données",
             "Vue d'ensemble",
-            "Vue par Livraisons",
-            "RFC",
-            "Composants",
-            "Incohérences",
-            "UMEP"
+            "Chargement",
+            "Vue par livraisons",
+            "Vue par RFC",
+            "Vue par composants",
+            "Vue par UMEP"
         ]
     )
 
