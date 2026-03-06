@@ -9,6 +9,11 @@ st.set_page_config(
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
+
+if st.sidebar.button("Déconnexion"):
+    st.session_state.authenticated = False
+    st.rerun()
+
 # Page login
 if not st.session_state.authenticated:
     login()
