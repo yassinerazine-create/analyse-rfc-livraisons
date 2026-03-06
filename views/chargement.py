@@ -28,3 +28,6 @@ def show():
         st.write("Nombre de lignes :", len(df))
 
         st.dataframe(df.head(100), use_container_width=True)
+        st.write("Aperçu de la colonne 'Semaine cible'")
+        st.write(df["Semaine cible"].unique())
+

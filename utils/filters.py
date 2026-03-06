@@ -6,13 +6,15 @@ def filter_by_week(df):
 
     df = df.copy()
 
-    # conversion sécurisée
-    df["Semaine cible"] = pd.to_numeric(
-        df["Semaine cible"],
-        errors="coerce"
-    )
+    # conversion en numérique, ignorer les valeurs non convertibles
+    df["Semaine cible"] = pd.to_numeric(df["Semaine cible"], errors="coerce")
 
-    weeks = sorted(df["Semaine cible"].dropna().unique())
+    # garder uniquement les semaines valides
+    weeks = sorted(df["Semaine cible"].dropna().astype(int).unique())
+
+    if not weeks:
+        st.warning("⚠️ Aucune semaine valide dans les données")
+        return df
 
     selected_weeks = st.multiselect(
         "Filtrer par semaine cible",
