@@ -11,5 +11,8 @@ def show():
     #df = st.session_state.data
     df = st.session_state.data.copy()
     df = filter_split_and_reorder(df)
-    livraison = st.selectbox("Choisir livraison", df["Label Livraison affecté"].unique())
-    st.dataframe(df[df["Label Livraison affecté"] == livraison])
+    #livraison = st.selectbox("Choisir livraison", df["Label Livraison affecté"].unique())
+    #st.dataframe(df[df["Label Livraison affecté"] == livraison])
+    livraisons = st.multiselect("Choisir livraison(s)", df["Label Livraison affecté"].unique(), default=df["Label Livraison affecté"].unique())
+    st.dataframe(df[df["Label Livraison affecté"].isin(livraisons)])
+

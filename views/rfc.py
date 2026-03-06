@@ -11,5 +11,8 @@ def show():
     #df = st.session_state.data
     df = st.session_state.data.copy()
     df = filter_split_and_reorder(df)
-    rfc = st.selectbox("Choisir RFC", df["RFC"].unique())
-    st.dataframe(df[df["RFC"] == rfc])
+    #rfc = st.selectbox("Choisir RFC", df["RFC"].unique())
+    #st.dataframe(df[df["RFC"] == rfc])
+    rfcs = st.multiselect("Choisir RFC(s)", df["RFC"].unique(), default=df["RFC"].unique())
+    st.dataframe(df[df["RFC"].isin(rfcs)])
+
