@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.auth import login
-from views import chargement, incoherences, vue_ensemble, livraisons, rfc, composants, umep
+from views import 1_chargement_donnees, 2_detection_incoherences, 3_vue_ensemble, 4_vue_livraisons, 5_vue_rfc, 6_vue_composants, 7_vue_umep
 
 st.set_page_config(
     page_title="Analyse RFC / Livraisons",
@@ -42,22 +42,22 @@ if st.sidebar.button("Déconnexion"):
 
 # ROUTER
 if menu == "Chargement des données":
-    chargement.show()
+    1_chargement_donnees.show()
 
 elif menu == "Détection incohérences":
-    incoherences.show()
+    2_detection_incoherences.show()
 
 elif menu == "Vue d'ensemble":
-    vue_ensemble.show()
+    3_vue_ensemble.show()
 
 elif menu == "Vue livraisons":
-    livraisons.show()
+    4_vue_livraisons.show()
 
 elif menu == "Vue RFC":
-    rfc.show()
+    5_vue_rfc.show()
 
 elif menu == "Vue composants":
-    composants.show()
+    6_vue_composants.show()
 
 elif menu == "Vue UMEP":
-    umep.show()
+    7_vue_umep.show()
