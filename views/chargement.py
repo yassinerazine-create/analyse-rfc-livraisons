@@ -13,6 +13,6 @@ def show():
             df = pd.read_excel(file)
 
         df = filter_split_and_reorder(df)
-        st.session_state["data"] = df
+        st.session_state.df = df
         st.success("Données chargées")
         st.dataframe(df)
