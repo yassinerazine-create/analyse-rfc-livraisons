@@ -1,18 +1,21 @@
 import streamlit as st
-from utils.clean import filter_split_and_reorder
+from utils.filters import filter_by_week
 
 
-def show():
+def show(df):
+
     st.title("Vue par RFC")
-    if "data" not in st.session_state:
-        st.warning("Veuillez charger les données")
-        return
 
-    #df = st.session_state.data
-    df = st.session_state.data.copy()
-    df = filter_split_and_reorder(df)
-    #rfc = st.selectbox("Choisir RFC", df["RFC"].unique())
-    #st.dataframe(df[df["RFC"] == rfc])
-    rfcs = st.multiselect("Choisir RFC(s)", df["RFC"].unique(), default=df["RFC"].unique())
-    st.dataframe(df[df["RFC"].isin(rfcs)])
+    df = filter_by_week(df)
 
+    rfcs = st.multiselect(
+        "Choisir RFC(s)",
+        sorted(df["RFC"].dropna().unique()),
+        default=sorted(df["RFC"].dropna().unique())
+    )
+
+    df_filtered = df[df["RFC"].isin(rfcs)]
+
+    st.write("Nombre de lignes :", len(df_filtered))
+
+    st.dataframe(df_filtered, use_container_width=True)

@@ -1,50 +1,53 @@
 import streamlit as st
 
-# imports des pages
-import views.chargement as chargement
-import views.vue_ensemble as vue_ensemble
-import views.livraisons as livraisons
-import views.rfc as rfc
-import views.composants as composants
-import views.incoherences as incoherences
-import views.umep as umep
+from views import chargement
+from views import vue_ensemble
+from views import livraisons
+from views import rfc
+from views import composants
+from views import umep
+from views import incoherences
 
-# -------------------------
-# CONFIG PAGE
-# -------------------------
 st.set_page_config(page_title="Analyse RFC / Livraisons", layout="wide")
 
-# -------------------------
-# SIDEBAR
-# -------------------------
-st.sidebar.title("Navigation")
+st.title("Analyse RFC / Livraisons")
+
 page = st.sidebar.radio(
-    "Choisir une vue",
+    "Navigation",
     [
         "Chargement des données",
         "Vue d'ensemble",
         "Livraisons",
         "RFC",
         "Composants",
-        "Incohérences",
-        "UMEP"
+        "UMEP",
+        "Incohérences"
     ]
 )
 
-# -------------------------
-# ROUTER DES PAGES
-# -------------------------
 if page == "Chargement des données":
     chargement.show()
-elif page == "Vue d'ensemble":
-    vue_ensemble.show()
+
+if "df" not in st.session_state and page != "Chargement des données":
+    st.warning("Veuillez charger les données")
+    st.stop()
+
+df = st.session_state.df
+
+if page == "Vue d'ensemble":
+    vue_ensemble.show(df)
+
 elif page == "Livraisons":
-    livraisons.show()
+    livraisons.show(df)
+
 elif page == "RFC":
-    rfc.show()
+    rfc.show(df)
+
 elif page == "Composants":
-    composants.show()
-elif page == "Incohérences":
-    incoherences.show(st.session_state.df)
+    composants.show(df)
+
 elif page == "UMEP":
-    umep.show()
+    umep.show(df)
+
+elif page == "Incohérences":
+    incoherences.show(df)

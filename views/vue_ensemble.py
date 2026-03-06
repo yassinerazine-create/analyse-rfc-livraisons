@@ -1,16 +1,13 @@
 import streamlit as st
-import plotly.express as px
-from utils.clean import filter_split_and_reorder
+from utils.filters import filter_by_week
 
-def show():
+
+def show(df):
+
     st.title("Vue d'ensemble")
 
-    if "data" not in st.session_state:
-        st.warning("Veuillez charger les données")
-        return
+    df = filter_by_week(df)
 
-    df = st.session_state.data.copy()
-    df = filter_split_and_reorder(df)
+    st.write("Nombre de lignes :", len(df))
 
-    fig = px.histogram(df, x="Label Livraison affecté", title="Composants par livraison")
-    st.plotly_chart(fig, use_container_width=True)
+    st.dataframe(df, use_container_width=True)

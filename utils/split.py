@@ -1,46 +1,50 @@
 import pandas as pd
+import re
 
-def split_composant_version(df):
-    """
-    Scinde la colonne Composant_Version en Composant et Version
-    Cas traités :
-    - abcf_sla_101_interface_fournisseurs:2.00.27 -> Composant = abcf_sla_101_interface_fournisseurs, Version = 2.00.27
-    - ECHANGES_025.110:02 -> Composant = ECHANGES, Version = 025.110:02
-    - ECHANGES_025.149.01:ECHANGES_025.149.01 -> Composant = ECHANGES, Version = 025.149.01
-    """
 
-    def extract(val):
-        val = str(val)
+def split_component_version(value):
 
-        if val.startswith("ECHANGES_"):
-            # Composant = ECHANGES
-            composant = "ECHANGES"
+    value = str(value)
 
-            # Vérifier s'il y a ':'
-            if ':' in val:
-                parts = val.split(':', 1)
-                left = parts[0]   # ECHANGES_025.110 ou ECHANGES_025.149.01
-                right = parts[1]  # peut être "02" ou "ECHANGES_025.149.01"
+    if value.startswith("ECHANGES"):
 
-                # Pour ECHANGES_025.149.01:ECHANGES_025.149.01
-                if right.startswith("ECHANGES_"):
-                    version = left.split('_',1)[1]  # tout après le premier '_'
-                else:
-                    # Pour ECHANGES_025.110:02
-                    version = left.split('_',1)[1] + ":" + right  # 025.110:02
-            else:
-                # Pas de ':', juste prendre après premier '_'
-                version = val.split('_',1)[1]
+        match = re.search(r"(\d+\.\d+(\.\d+)?(:\d+)?)", value)
 
-        else:
-            # Autres composants : split normal sur ':'
-            if ':' in val:
-                composant, version = val.split(':',1)
-            else:
-                composant = val
-                version = ''
+        if match:
+            return "ECHANGES", match.group(0)
 
-        return pd.Series([composant.upper(), version])
+    if ":" in value:
+        parts = value.split(":")
+        return parts[0], parts[1]
 
-    df[['Composant', 'Version']] = df['Composant_Version'].apply(extract)
+    if "_" in value:
+        parts = value.split("_", 1)
+        return parts[0], parts[1]
+
+    return value, ""
+
+
+def filter_split_and_reorder(df):
+
+    df = df.copy()
+
+    df = df.rename(columns={
+        "Label Livraison affecté": "Label"
+    })
+
+    comp = df["Composant_Version"].apply(split_component_version)
+
+    df["Composant"] = comp.apply(lambda x: x[0])
+    df["Version"] = comp.apply(lambda x: x[1])
+
+    df = df[[
+        "Semaine cible",
+        "Composant",
+        "Version",
+        "UMEP",
+        "RFC",
+        "Label",
+        "Composant_Version"
+    ]]
+
     return df

@@ -1,18 +1,21 @@
 import streamlit as st
-from utils.clean import filter_split_and_reorder
+from utils.filters import filter_by_week
 
 
-def show():
+def show(df):
+
     st.title("Vue par UMEP")
-    if "data" not in st.session_state:
-        st.warning("Veuillez charger les données")
-        return
 
-    #df = st.session_state.data
-    df = st.session_state.data.copy()
-    df = filter_split_and_reorder(df)
-    #umep = st.selectbox("Choisir UMEP", df["UMEP"].unique())
-    #st.dataframe(df[df["UMEP"] == umep])
-    umeps = st.multiselect("Choisir UMEP(s)", df["UMEP"].unique(), default=df["UMEP"].unique())
-    st.dataframe(df[df["UMEP"].isin(umeps)])
+    df = filter_by_week(df)
 
+    umeps = st.multiselect(
+        "Choisir UMEP(s)",
+        sorted(df["UMEP"].dropna().unique()),
+        default=sorted(df["UMEP"].dropna().unique())
+    )
+
+    df_filtered = df[df["UMEP"].isin(umeps)]
+
+    st.write("Nombre de lignes :", len(df_filtered))
+
+    st.dataframe(df_filtered, use_container_width=True)

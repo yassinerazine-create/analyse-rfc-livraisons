@@ -1,18 +1,21 @@
 import streamlit as st
-from utils.clean import filter_split_and_reorder
+from utils.filters import filter_by_week
 
 
-def show():
+def show(df):
+
     st.title("Vue par livraison")
-    if "data" not in st.session_state:
-        st.warning("Veuillez charger les données")
-        return
 
-    #df = st.session_state.data
-    df = st.session_state.data.copy()
-    df = filter_split_and_reorder(df)
-    #livraison = st.selectbox("Choisir livraison", df["Label Livraison affecté"].unique())
-    #st.dataframe(df[df["Label Livraison affecté"] == livraison])
-    livraisons = st.multiselect("Choisir livraison(s)", df["Label Livraison affecté"].unique(), default=df["Label Livraison affecté"].unique())
-    st.dataframe(df[df["Label Livraison affecté"].isin(livraisons)])
+    df = filter_by_week(df)
 
+    livraisons = st.multiselect(
+        "Choisir livraison(s)",
+        sorted(df["Label"].dropna().unique()),
+        default=sorted(df["Label"].dropna().unique())
+    )
+
+    df_filtered = df[df["Label"].isin(livraisons)]
+
+    st.write("Nombre de lignes :", len(df_filtered))
+
+    st.dataframe(df_filtered, use_container_width=True)

@@ -1,18 +1,21 @@
 import streamlit as st
-from utils.clean import filter_split_and_reorder
+from utils.filters import filter_by_week
 
 
-def show():
+def show(df):
+
     st.title("Vue par composant")
-    if "data" not in st.session_state:
-        st.warning("Veuillez charger les données")
-        return
 
-    #df = st.session_state.data
-    df = st.session_state.data.copy()
-    df = filter_split_and_reorder(df)
-    #comp = st.selectbox("Choisir composant", df["Composant"].unique())
-    #st.dataframe(df[df["Composant"] == comp])
-    composants = st.multiselect("Choisir Composants(s)", df["Composant"].unique(), default=df["Composant"].unique())
-    st.dataframe(df[df["Composant"].isin(composants)])
+    df = filter_by_week(df)
 
+    composants = st.multiselect(
+        "Choisir composant(s)",
+        sorted(df["Composant"].dropna().unique()),
+        default=sorted(df["Composant"].dropna().unique())
+    )
+
+    df_filtered = df[df["Composant"].isin(composants)]
+
+    st.write("Nombre de lignes :", len(df_filtered))
+
+    st.dataframe(df_filtered, use_container_width=True)
