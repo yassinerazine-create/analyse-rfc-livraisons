@@ -7,12 +7,16 @@ def show():
 
     file = st.file_uploader("Importer fichier CSV ou Excel", type=["csv","xlsx"])
     if file:
-        if file.name.endswith("csv"):
+
+        if file.name.endswith(".csv"):
             df = pd.read_csv(file)
         else:
             df = pd.read_excel(file)
 
         df = filter_split_and_reorder(df)
+
         st.session_state.df = df
+
         st.success("Données chargées")
+
         st.dataframe(df)

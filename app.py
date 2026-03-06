@@ -31,6 +31,14 @@ page = st.sidebar.radio(
     ]
 )
 
+# Vérifier si les données sont chargées
+if page != "Chargement des données":
+    if "df" not in st.session_state:
+        st.warning("Veuillez charger les données dans l'onglet 'Chargement des données'")
+        st.stop()
+
+
+
 # -------------------------
 # ROUTER DES PAGES
 # -------------------------
