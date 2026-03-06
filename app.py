@@ -1,5 +1,4 @@
 import streamlit as st
-from utils.auth import login
 import views.chargement as chargement
 import views.incoherences as incoherences
 import views.vue_ensemble as vue_ensemble
@@ -7,6 +6,7 @@ import views.livraisons as livraisons
 import views.rfc as rfc
 import views.composants as composants
 import views.umep as umep
+from utils.auth import login
 
 
 st.set_page_config(
