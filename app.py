@@ -24,4 +24,7 @@ Application permettant d'analyser les dépendances entre :
 - Composants
 - Livraisons
 - UMEP
+
+
+réalisée par YRA
 """)
