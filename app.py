@@ -1,6 +1,13 @@
 import streamlit as st
 from utils.auth import login
-from views import chargement, incoherences, vue_ensemble, livraisons, rfc, composants, umep
+import views.chargement as chargement
+import views.incoherences as incoherences
+import views.vue_ensemble as vue_ensemble
+import views.livraisons as livraisons
+import views.rfc as rfc
+import views.composants as composants
+import views.umep as umep
+
 
 st.set_page_config(
     page_title="Analyse RFC / Livraisons",
