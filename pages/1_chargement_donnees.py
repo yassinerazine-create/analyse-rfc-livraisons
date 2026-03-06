@@ -1,6 +1,12 @@
 import streamlit as st
 from utils.loader import load_file
 
+
+if "authenticated" not in st.session_state or not st.session_state.authenticated:
+    st.warning("Veuillez vous connecter.")
+    st.stop()
+
+    
 st.title("Chargement de données")
 
 file = st.file_uploader("Importer fichier", type=["xlsx","csv"])

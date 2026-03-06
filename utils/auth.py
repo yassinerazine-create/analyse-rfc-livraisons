@@ -7,12 +7,12 @@ users = {
 
 def login():
 
-    st.title("Authentification :")
+    st.title("Connexion")
 
-    username = st.text_input("Utilisateur :")
-    password = st.text_input("Mot de passe :", type="password")
+    username = st.text_input("Utilisateur")
+    password = st.text_input("Mot de passe", type="password")
 
-    if st.button("Connexion"):
+    if st.button("Se connecter"):
 
         if username in users and users[username] == password:
             st.session_state.authenticated = True

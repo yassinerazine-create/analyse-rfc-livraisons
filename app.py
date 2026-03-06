@@ -9,22 +9,14 @@ st.set_page_config(
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
+# Page login
 if not st.session_state.authenticated:
     login()
     st.stop()
 
+# Application principale
 st.sidebar.success("Utilisateur connecté")
 
 st.title("Analyse des adhérences RFC / Livraisons")
 
-st.markdown("""
-Application permettant d'analyser les dépendances entre :
-
-- RFC
-- Composants
-- Livraisons
-- UMEP
-
-
-réalisée par YRA
-""")
+st.write("Utilisez le menu à gauche pour naviguer dans l'application.")
