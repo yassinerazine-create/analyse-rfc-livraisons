@@ -3,13 +3,8 @@ import pandas as pd
 
 
 def version_to_tuple(version):
-    """
-    Convertit une version '025.149.01' ou '025.110:02'
-    en tuple comparable.
-    """
-    version = str(version)
-
-    version = version.replace(":", ".")
+    """Convertit une version en tuple comparable"""
+    version = str(version).replace(":", ".")
     parts = version.split(".")
 
     try:
@@ -18,14 +13,15 @@ def version_to_tuple(version):
         return (0,)
 
 
-def detect_incoherences(df):
+# --------------------------------------------------
+# INCOHERENCE VERSION / SEMAINE
+# --------------------------------------------------
+def detect_version_incoherences(df):
 
     incoherences = []
 
-    # convertir versions pour comparaison
     df["version_tuple"] = df["Version"].apply(version_to_tuple)
 
-    # grouper par composant
     for composant, group in df.groupby("Composant"):
 
         group = group.sort_values("version_tuple")
@@ -65,19 +61,47 @@ def detect_incoherences(df):
     return pd.DataFrame(incoherences)
 
 
+# --------------------------------------------------
+# MEME VERSION / SEMAINES DIFFERENTES
+# --------------------------------------------------
+def detect_same_version_multiple_weeks(df):
+
+    duplicates = df.groupby(["Composant", "Version"]).filter(
+        lambda x: x["Semaine cible"].nunique() > 1
+    )
+
+    return duplicates.sort_values(["Composant", "Version", "Semaine cible"])
+
+
+# --------------------------------------------------
+# PAGE STREAMLIT
+# --------------------------------------------------
 def show(df):
 
     st.title("Détection des incohérences")
 
-    inco = detect_incoherences(df)
+    # ----------------------------------
+    # tableau 1
+    # ----------------------------------
+    st.subheader("Incohérences Version / Semaine")
+
+    inco = detect_version_incoherences(df)
 
     if inco.empty:
-        st.success("✅ Aucune incohérence détectée")
-        return
+        st.success("Aucune incohérence détectée")
+    else:
+        st.warning(f"{len(inco)} incohérence(s) détectée(s)")
+        st.dataframe(inco, use_container_width=True)
 
-    st.warning(f"⚠️ {len(inco)} incohérence(s) détectée(s)")
+    # ----------------------------------
+    # tableau 2
+    # ----------------------------------
+    st.subheader("Même composant et version sur plusieurs semaines")
 
-    st.dataframe(
-        inco,
-        use_container_width=True
-    )
+    dup = detect_same_version_multiple_weeks(df)
+
+    if dup.empty:
+        st.success("Aucune version planifiée sur plusieurs semaines")
+    else:
+        st.warning(f"{len(dup)} ligne(s) concernée(s)")
+        st.dataframe(dup, use_container_width=True)
