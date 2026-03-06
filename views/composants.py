@@ -13,6 +13,6 @@ def show():
     df = filter_split_and_reorder(df)
     #comp = st.selectbox("Choisir composant", df["Composant"].unique())
     #st.dataframe(df[df["Composant"] == comp])
-    composants = st.multiselect("Choisir Composants(s)", df["RFC"].unique(), default=df["Composant"].unique())
+    composants = st.multiselect("Choisir Composants(s)", df["Composant"].unique(), default=df["Composant"].unique())
     st.dataframe(df[df["Composant"].isin(composants)])
 
