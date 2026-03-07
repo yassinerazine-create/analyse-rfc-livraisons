@@ -1,6 +1,6 @@
 import streamlit as st
-from views import chargement, vue_ensemble, livraisons, rfc, composants, umep, incoherences
-from style import apply_style
+import views
+import style
 
 st.set_page_config(
     page_title="Analyse RFC Livraisons",
@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-apply_style()
+style.apply_style()
 
 st.sidebar.title("📦 Analyse RFC")
 
@@ -26,7 +26,7 @@ menu = st.sidebar.radio(
 )
 
 if menu == "Chargement":
-    chargement.show()
+    views.chargement.show()
 
 else:
 
@@ -37,19 +37,19 @@ else:
     df = st.session_state.df
 
     if menu == "Vue d'ensemble":
-        vue_ensemble.show(df)
+        views.vue_ensemble.show(df)
 
     if menu == "Livraisons":
-        livraisons.show(df)
+        views.livraisons.show(df)
 
     if menu == "RFC":
-        rfc.show(df)
+        views.rfc.show(df)
 
     if menu == "Composants":
-        composants.show(df)
+        views.composants.show(df)
 
     if menu == "UMEP":
-        umep.show(df)
+        views.umep.show(df)
 
     if menu == "Incohérences":
-        incoherences.show(df)
+        views.incoherences.show(df)
