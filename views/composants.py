@@ -1,23 +1,19 @@
 import streamlit as st
 from utils.filters import filter_by_week
 
-
 def show(df):
 
-    st.title("Vue par composant")
+    st.title("Composants")
 
     df = filter_by_week(df)
 
-    composants = st.multiselect(
-    label_visibility="visible",
-    placeholder="Sélectionner...",
-        "Choisir composant(s)",
-        sorted(df["Composant"].dropna().unique()),
-        default=sorted(df["Composant"].dropna().unique())
+    c = st.multiselect(
+        "Composant",
+        sorted(df["Composant"].unique())
     )
 
-    df_filtered = df[df["Composant"].isin(composants)]
+    if c:
 
-    st.write("Nombre de lignes :", len(df_filtered))
+        df = df[df["Composant"].isin(c)]
 
-    st.dataframe(df_filtered, use_container_width=True)
+    st.dataframe(df,use_container_width=True)

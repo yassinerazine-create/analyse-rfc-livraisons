@@ -1,5 +1,14 @@
 import streamlit as st
-from views import chargement, vue_ensemble, livraisons, rfc, composants, umep, incoherences
+from views import (
+    chargement,
+    dashboard,
+    vue_ensemble,
+    livraisons,
+    rfc,
+    composants,
+    umep,
+    incoherences
+)
 from style import apply_style
 
 st.set_page_config(
@@ -16,6 +25,7 @@ menu = st.sidebar.radio(
     "Navigation",
     [
         "Chargement",
+        "Dashboard",
         "Vue d'ensemble",
         "Livraisons",
         "RFC",
@@ -35,6 +45,9 @@ else:
         st.stop()
 
     df = st.session_state.df
+
+    if menu == "Dashboard":
+        dashboard.show(df)
 
     if menu == "Vue d'ensemble":
         vue_ensemble.show(df)

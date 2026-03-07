@@ -1,23 +1,19 @@
 import streamlit as st
 from utils.filters import filter_by_week
 
-
 def show(df):
 
-    st.title("Vue par UMEP")
+    st.title("UMEP")
 
     df = filter_by_week(df)
 
-    umeps = st.multiselect(
-    label_visibility="visible",
-    placeholder="Sélectionner...",
-        "Choisir UMEP(s)",
-        sorted(df["UMEP"].dropna().unique()),
-        default=sorted(df["UMEP"].dropna().unique())
+    u = st.multiselect(
+        "UMEP",
+        sorted(df["UMEP"].unique())
     )
 
-    df_filtered = df[df["UMEP"].isin(umeps)]
+    if u:
 
-    st.write("Nombre de lignes :", len(df_filtered))
+        df = df[df["UMEP"].isin(u)]
 
-    st.dataframe(df_filtered, use_container_width=True)
+    st.dataframe(df,use_container_width=True)

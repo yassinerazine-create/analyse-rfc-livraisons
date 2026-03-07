@@ -1,9 +1,6 @@
-import re
+def version_to_tuple(v):
 
-
-def version_to_tuple(version):
-
-    version = str(version).replace(":", ".")
-    nums = re.findall(r'\d+', version)
-
-    return tuple(int(n) for n in nums)
+    try:
+        return tuple(int(x) for x in str(v).split("."))
+    except:
+        return (0,)
