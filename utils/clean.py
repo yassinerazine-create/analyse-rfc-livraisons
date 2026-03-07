@@ -6,42 +6,52 @@ def split_composant_version(value):
     value = str(value)
 
     if value.startswith("ECHANGES"):
-
         match = re.search(r"(\d+\.\d+(\.\d+)*)", value)
-
         if match:
             return "ECHANGES", match.group(0)
 
     if ":" in value:
-
-        comp, ver = value.split(":",1)
-
+        comp, ver = value.split(":", 1)
         return comp, ver
 
-    return value,""
+    return value, ""
 
 
 def filter_split_and_reorder(df):
 
     df = df.copy()
 
-    df["Semaine cible"] = (
-        df["Semaine cible"]
-        .astype(str)
-        .str.replace("S","")
-    )
+    # renommer colonnes si nécessaire
+    rename_map = {
+        "Label Livraison affecté": "Label"
+    }
 
-    df["Semaine cible"] = pd.to_numeric(
-        df["Semaine cible"],
-        errors="coerce"
-    )
+    df = df.rename(columns=rename_map)
 
-    split = df["Composant_Version"].apply(split_composant_version)
+    # conversion semaine
+    if "Semaine cible" in df.columns:
 
-    df["Composant"] = split.apply(lambda x:x[0])
-    df["Version"] = split.apply(lambda x:x[1])
+        df["Semaine cible"] = (
+            df["Semaine cible"]
+            .astype(str)
+            .str.replace("S", "", regex=False)
+        )
 
-    cols = [
+        df["Semaine cible"] = pd.to_numeric(
+            df["Semaine cible"],
+            errors="coerce"
+        )
+
+    # split composant/version
+    if "Composant_Version" in df.columns:
+
+        split = df["Composant_Version"].apply(split_composant_version)
+
+        df["Composant"] = split.apply(lambda x: x[0])
+        df["Version"] = split.apply(lambda x: x[1])
+
+    # ordre colonnes souhaité
+    desired_cols = [
         "Année Mois cible (LAAMM)",
         "Semaine cible",
         "Composant",
@@ -50,6 +60,9 @@ def filter_split_and_reorder(df):
         "RFC",
         "Label"
     ]
+
+    # garder uniquement les colonnes présentes
+    cols = [c for c in desired_cols if c in df.columns]
 
     df = df[cols]
 
