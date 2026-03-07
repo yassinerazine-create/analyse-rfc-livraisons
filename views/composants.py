@@ -9,6 +9,8 @@ def show(df):
     df = filter_by_week(df)
 
     composants = st.multiselect(
+    label_visibility="visible",
+    placeholder="Sélectionner...",
         "Choisir composant(s)",
         sorted(df["Composant"].dropna().unique()),
         default=sorted(df["Composant"].dropna().unique())

@@ -12,11 +12,14 @@ def filter_by_week(df):
         st.warning("⚠️ Aucune semaine valide dans les données")
         return df
 
+
     selected_weeks = st.multiselect(
-        "Filtrer par semaine cible",
-        weeks,
-        default=weeks
-    )
+    "Choisir semaine(s)",
+    sorted(df["Semaine cible"].dropna().unique()),
+    default=sorted(df["Semaine cible"].dropna().unique()),
+    placeholder="Sélectionner une ou plusieurs semaine"
+)
+
 
     return df[df["Semaine cible"].isin(selected_weeks)]
 

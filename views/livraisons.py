@@ -8,10 +8,12 @@ def show(df):
     df = keep_highest_version_per_rfc_composant(df)
 
     livraisons = st.multiselect(
-        "Choisir livraison(s)",
+        "Choisir Label(s)",
         sorted(df["Label"].dropna().unique()),
-        default=sorted(df["Label"].dropna().unique())
+        default=sorted(df["Label"].dropna().unique()),
+        placeholder="Sélectionner une ou plusieurs RFC"
     )
+
 
     df_filtered = df[df["Label"].isin(livraisons)]
     st.write("Nombre de lignes :", len(df_filtered))

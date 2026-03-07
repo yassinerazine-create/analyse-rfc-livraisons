@@ -9,6 +9,8 @@ def show(df):
     df = filter_by_week(df)
 
     umeps = st.multiselect(
+    label_visibility="visible",
+    placeholder="Sélectionner...",
         "Choisir UMEP(s)",
         sorted(df["UMEP"].dropna().unique()),
         default=sorted(df["UMEP"].dropna().unique())

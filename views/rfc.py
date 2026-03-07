@@ -10,10 +10,12 @@ def show(df):
     df = keep_highest_version_per_rfc_composant(df)
 
     rfcs = st.multiselect(
-        "Choisir RFC(s)",
-        sorted(df["RFC"].dropna().unique()),
-        default=sorted(df["RFC"].dropna().unique())
-    )
+    "Choisir RFC(s)",
+    sorted(df["RFC"].dropna().unique()),
+    default=sorted(df["RFC"].dropna().unique()),
+    placeholder="Sélectionner une ou plusieurs RFC"
+)
+
 
     df_filtered = df[df["RFC"].isin(rfcs)]
 
