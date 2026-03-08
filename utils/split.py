@@ -1,9 +1,9 @@
-import re
+import pandas as pd
 
 def split_composant_version(cv: str):
     """
     Split un champ Composant_Version en composant et version.
-    
+
     Gère les formats :
     - XXXX_02.12.52 -> XXXX / 02.12.52
     - XXXX_02.12:01 -> XXXX / 02.12:01
@@ -21,7 +21,6 @@ def split_composant_version(cv: str):
         parts = cv.split(':')
         prefix = parts[0]
         suffix = parts[1]
-        # vérifier si prefix contient '_', prendre tout avant dernier '_'
         if '_' in prefix:
             idx = prefix.rfind('_')
             composant = prefix[:idx]
