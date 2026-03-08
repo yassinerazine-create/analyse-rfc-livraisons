@@ -35,7 +35,7 @@ def show(df):
                 return int(float(x))
             except (ValueError, TypeError):
                 return pd.NA
-        inco["Semaine concernée"] = inco["Semaine cible"].apply(safe_int)
+        inco["Semaine concernée"] = inco["Semaine concernée"].apply(safe_int)
 
     # Assurer colonnes précédentes
     for col in ["RFC précédente", "Label précédente", "Semaine précédente"]:
@@ -46,7 +46,7 @@ def show(df):
     # Créer Version max précédente formatée
     # -------------------------
     def format_prev_version(row):
-        return f"⬇ {row['Version max précédente']} ({row['RFC précédente']},{row['Semaine précédente']})"
+        return f"⬇ {row['Version max précédente']} (RFC:{row['RFC précédente']}, {row['Label précédente']}, S{row['Semaine précédente']})"
 
     def format_max_version(row):
         return f"⬆ {row['Version max semaine']}"
