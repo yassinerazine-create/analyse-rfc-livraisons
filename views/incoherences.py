@@ -1,10 +1,47 @@
 import streamlit as st
+import pandas as pd
 from utils.incoherence_detection import detect_version_incoherence
 
 def show(df):
     st.title("Incohérences")
+
+    # colonne RFC et Label
+    df = df.copy()
+    for col in ["RFC", "Label"]:
+        if col not in df.columns:
+            df[col] = ""
+
     inco = detect_version_incoherence(df)
+
     if inco.empty:
         st.success("Aucune incohérence détectée")
-    else:
-        st.dataframe(inco,use_container_width=True)
+        return
+
+    # ajouter flèches et couleurs
+    def style_versions(row):
+        sup = f"⬆ {row['Version supérieure']}"
+        inf = f"⬇ {row['Version inférieure']}"
+        return pd.Series([sup, inf])
+
+    styled = inco.copy()
+    styled[["Version supérieure", "Version inférieure"]] = styled.apply(style_versions, axis=1)
+
+    # colonne ordre final
+    cols = [
+        "Composant", "RFC", "Label",
+        "Version supérieure", "Semaine supérieure",
+        "Version inférieure", "Semaine inférieure"
+    ]
+    styled = styled[cols]
+
+    # couleurs conditionnelles
+    def color_cells(val):
+        if isinstance(val, str):
+            if val.startswith("⬆"):
+                return 'color: green; font-weight:bold'
+            elif val.startswith("⬇"):
+                return 'color: red; font-weight:bold'
+        return ''
+
+    st.dataframe(styled.style.applymap(color_cells, subset=["Version supérieure","Version inférieure"]),
+                 use_container_width=True)

@@ -9,3 +9,4 @@ def show(df):
     if choix:
         df = df[df["Label"].isin(choix)]
     st.dataframe(df,use_container_width=True)
+
