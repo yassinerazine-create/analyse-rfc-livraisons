@@ -5,8 +5,7 @@ from utils.incoherence_detection import detect_version_incoherence
 def show(df):
     st.title("Incohérences")
 
-    # colonne RFC et Label
-    df = df.copy()
+    # assure que RFC et Label existent dans le DataFrame
     for col in ["RFC", "Label"]:
         if col not in df.columns:
             df[col] = ""
@@ -17,7 +16,7 @@ def show(df):
         st.success("Aucune incohérence détectée")
         return
 
-    # ajouter flèches et couleurs
+    # Ajouter flèches ↑↓ et couleur
     def style_versions(row):
         sup = f"⬆ {row['Version supérieure']}"
         inf = f"⬇ {row['Version inférieure']}"
@@ -26,12 +25,13 @@ def show(df):
     styled = inco.copy()
     styled[["Version supérieure", "Version inférieure"]] = styled.apply(style_versions, axis=1)
 
-    # colonne ordre final
-    cols = [
+    # colonnes finales (ne garder que celles existantes)
+    desired_cols = [
         "Composant", "RFC", "Label",
         "Version supérieure", "Semaine supérieure",
         "Version inférieure", "Semaine inférieure"
     ]
+    cols = [c for c in desired_cols if c in styled.columns]  # <- seulement celles présentes
     styled = styled[cols]
 
     # couleurs conditionnelles
@@ -43,5 +43,7 @@ def show(df):
                 return 'color: red; font-weight:bold'
         return ''
 
-    st.dataframe(styled.style.applymap(color_cells, subset=["Version supérieure","Version inférieure"]),
-                 use_container_width=True)
+    st.dataframe(
+        styled.style.applymap(color_cells, subset=["Version supérieure", "Version inférieure"]),
+        use_container_width=True
+    )
