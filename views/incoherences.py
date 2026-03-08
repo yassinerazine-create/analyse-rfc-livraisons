@@ -10,31 +10,40 @@ def show(df):
         if col not in df.columns:
             df[col] = ""
 
-    # détecte incohérences avec la nouvelle logique
+    # détecte incohérences avec version max précédente
     inco = detect_version_incoherence(df)
 
     if inco.empty:
         st.success("Aucune incohérence détectée")
         return
 
-    # ajouter flèches pour version max semaine vs max précédente
+    # transformer semaine pour afficher juste le nombre entier
+    if "Semaine concernée" in inco.columns:
+        inco["Semaine concernée"] = inco["Semaine concernée"].apply(lambda x: int(float(x)))
+
+    # flèches et couleurs pour versions
     def style_versions(row):
-        max_week = f"⬆ {row['Version max semaine']}"  # version max semaine
-        max_prev = f"⬇ {row['Version max précédente']}"  # version max précédente
+        max_week = f"⬆ {row['Version max semaine']}"
+        max_prev = f"⬇ {row['Version max précédente']} (RFC: {row['RFC précédente']}, Label: {row['Label précédente']}, Semaine: {row['Semaine précédente']})"
         return pd.Series([max_week, max_prev])
+
+    # ajouter info RFC/Label/Semaine de version max précédente
+    for col in ["RFC précédente", "Label précédente", "Semaine précédente"]:
+        if col not in inco.columns:
+            inco[col] = ""
 
     styled = inco.copy()
     styled[["Version max semaine", "Version max précédente"]] = styled.apply(style_versions, axis=1)
 
-    # colonnes finales existantes
+    # colonnes finales
     desired_cols = [
-        "Composant", "Semaine concernée", "RFC", "Label",
+        "Composant", "Semaine concernée",
         "Version max semaine", "Version max précédente"
     ]
     cols = [c for c in desired_cols if c in styled.columns]
     styled = styled[cols]
 
-    # appliquer couleurs conditionnelles
+    # couleurs conditionnelles
     def color_cells(val):
         if isinstance(val, str):
             if val.startswith("⬆"):
