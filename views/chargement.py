@@ -3,8 +3,8 @@ import pandas as pd
 from utils.clean import filter_split_and_reorder
 
 def show():
-
-    uploaded_file = st.file_uploader("Charger un fichier CSV", type=["csv"])
+    st.title("Chargement des données")
+    uploaded_file = st.file_uploader("Choisir un fichier CSV ou Excel", type=["csv","xlsx"])
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
         df = filter_split_and_reorder(df)
