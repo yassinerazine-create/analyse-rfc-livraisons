@@ -1,50 +1,64 @@
 import streamlit as st
+
+# import des pages
 from views import (
     chargement,
-    dashboard,
     vue_ensemble,
     livraisons,
     rfc,
     composants,
-    umep,
-    incoherences
-)
-from style import apply_style
-
-st.set_page_config(
-    page_title="Analyse RFC Livraisons",
-    page_icon="📦",
-    layout="wide"
+    incoherences,
+    umep
 )
 
-apply_style()
+st.set_page_config(page_title="Analyse RFC / Livraisons", layout="wide")
 
-st.sidebar.title("📦 Analyse RFC")
-menu = st.sidebar.radio(
-    "Navigation",
-    ["Chargement", "Dashboard", "Vue d'ensemble", "Livraisons", "RFC", "Composants", "UMEP", "Incohérences"]
+# -------------------------
+# SESSION
+# -------------------------
+if "df" not in st.session_state:
+    st.session_state.df = None
+
+# -------------------------
+# SIDEBAR
+# -------------------------
+st.sidebar.title("Navigation")
+page = st.sidebar.radio(
+    "Aller à :",
+    [
+        "Chargement des données",
+        "Vue d'ensemble",
+        "Livraisons",
+        "RFC",
+        "Composants",
+        "Incohérences",
+        "UMEP"
+    ]
 )
 
-if menu == "Chargement":
-    chargement.show()
-else:
-    if "df" not in st.session_state:
-        st.warning("Veuillez charger un fichier")
-        st.stop()
+# -------------------------
+# ROUTER
+# -------------------------
+df = st.session_state.df
 
-    df = st.session_state.df
-
-    if menu == "Dashboard":
-        dashboard.show(df)
-    if menu == "Vue d'ensemble":
+if page == "Chargement des données":
+    df = chargement.show()
+    st.session_state.df = df
+elif page == "Vue d'ensemble":
+    if df is not None:
         vue_ensemble.show(df)
-    if menu == "Livraisons":
+elif page == "Livraisons":
+    if df is not None:
         livraisons.show(df)
-    if menu == "RFC":
+elif page == "RFC":
+    if df is not None:
         rfc.show(df)
-    if menu == "Composants":
+elif page == "Composants":
+    if df is not None:
         composants.show(df)
-    if menu == "UMEP":
-        umep.show(df)
-    if menu == "Incohérences":
+elif page == "Incohérences":
+    if df is not None:
         incoherences.show(df)
+elif page == "UMEP":
+    if df is not None:
+        umep.show(df)
