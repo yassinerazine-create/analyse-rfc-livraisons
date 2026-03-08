@@ -4,22 +4,13 @@ from utils.clean import filter_split_and_reorder
 
 def show():
     st.title("Chargement des données")
-
-    file = st.file_uploader(
-        "Importer fichier CSV ou Excel",
-        type=["csv", "xlsx"]
-    )
-
-    if file:
-        if file.name.endswith(".csv"):
-            df = pd.read_csv(file)
+    uploaded_file = st.file_uploader("Choisir un fichier CSV ou Excel", type=["csv","xlsx"])
+    if uploaded_file:
+        if uploaded_file.name.endswith(".csv"):
+            df = pd.read_csv(uploaded_file)
         else:
-            df = pd.read_excel(file)
-
+            df = pd.read_excel(uploaded_file)
         df = filter_split_and_reorder(df)
-
         st.session_state.df = df
-
-        st.success("Données chargées")
-        st.write("Nombre de lignes :", len(df))
-        st.dataframe(df.head(100), use_container_width=True)
+        st.success("Fichier chargé avec succès")
+        st.dataframe(df,use_container_width=True)

@@ -20,26 +20,14 @@ st.set_page_config(
 apply_style()
 
 st.sidebar.title("📦 Analyse RFC")
-
 menu = st.sidebar.radio(
     "Navigation",
-    [
-        "Chargement",
-        "Dashboard",
-        "Vue d'ensemble",
-        "Livraisons",
-        "RFC",
-        "Composants",
-        "UMEP",
-        "Incohérences"
-    ]
+    ["Chargement", "Dashboard", "Vue d'ensemble", "Livraisons", "RFC", "Composants", "UMEP", "Incohérences"]
 )
 
 if menu == "Chargement":
     chargement.show()
-
 else:
-
     if "df" not in st.session_state:
         st.warning("Veuillez charger un fichier")
         st.stop()
@@ -48,21 +36,15 @@ else:
 
     if menu == "Dashboard":
         dashboard.show(df)
-
     if menu == "Vue d'ensemble":
         vue_ensemble.show(df)
-
     if menu == "Livraisons":
         livraisons.show(df)
-
     if menu == "RFC":
         rfc.show(df)
-
     if menu == "Composants":
         composants.show(df)
-
     if menu == "UMEP":
         umep.show(df)
-
     if menu == "Incohérences":
         incoherences.show(df)
