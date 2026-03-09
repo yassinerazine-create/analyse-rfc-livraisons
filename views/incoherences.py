@@ -1,106 +1,88 @@
 import streamlit as st
 import pandas as pd
-from utils.incoherence_detection import detect_version_incoherence
-from utils.split import split_composant_version
 
-def show(df):
 
-    st.title("Incohérences - Versions / Semaines")
+def show(df: pd.DataFrame):
 
-    # -------------------------
-    # Split composant/version
-    # -------------------------
-    if "Composant_Version" in df.columns:
-        df[["Composant", "Version"]] = df["Composant_Version"].apply(split_composant_version)
+    st.subheader("⚠️ Vue Incohérences")
 
-    # sécuriser colonnes
-    for col in ["RFC", "Label", "Semaine cible"]:
-        if col not in df.columns:
-            df[col] = None
-
-    # -------------------------
-    # Détection incohérences
-    # -------------------------
-    inco = detect_version_incoherence(df)
-
-    if inco.empty:
-        st.success("Aucune incohérence détectée")
+    if df.empty:
+        st.warning("Aucune donnée chargée.")
         return
 
-    # -------------------------
-    # Conversion robuste semaine
-    # -------------------------
-    if "Semaine concernée" in inco.columns:
+    data = df.copy()
 
-        inco["Semaine concernée"] = (
-            pd.to_numeric(inco["Semaine concernée"], errors="coerce")
-            .fillna(0)
-            .astype(int)
-        )
+    # normalisation colonnes
+    cols = {
+        "Application": "Application",
+        "Version": "Version",
+        "RFC": "RFC",
+        "Label": "Label",
+        "Semaine": "Semaine",
+        "Semaine cible": "Semaine cible",
+        "Version max semaine": "Version max semaine"
+    }
 
-    # -------------------------
-    # Colonnes précédentes sécurisées
-    # -------------------------
-    for col in ["RFC précédente", "Label précédente", "Semaine précédente"]:
-        if col not in inco.columns:
-            inco[col] = ""
+    for c in cols:
+        if c not in data.columns:
+            data[c] = None
 
-    # -------------------------
-    # Formatage versions
-    # -------------------------
-    def format_max(row):
-        return f"⬆ {row['Version max semaine']}"
+    data = data.rename(columns=cols)
+
+    # tri pour trouver version précédente
+    data = data.sort_values(["Application", "Version"])
+
+    data["Prev Version"] = data.groupby("Application")["Version"].shift(1)
+    data["Prev RFC"] = data.groupby("Application")["RFC"].shift(1)
+    data["Prev Label"] = data.groupby("Application")["Label"].shift(1)
+    data["Prev Semaine"] = data.groupby("Application")["Semaine"].shift(1)
+
+    inco = data.copy()
 
     def format_prev(row):
+        v = row.get("Prev Version")
+        rfc = row.get("Prev RFC")
+        label = row.get("Prev Label")
+        week = row.get("Prev Semaine")
 
-        week = row["Semaine précédente"]
+        if pd.isna(v):
+            return ""
+
+        # sécurisation semaine
         if pd.notna(week):
-            week = f"S{int(week)}"
+            try:
+                week = f"S{int(float(week))}"
+            except:
+                week = str(week)
         else:
             week = ""
 
-        return (
-            f"⬇ {row['Version max précédente']} "
-            f"(RFC:{row['RFC précédente']}, {row['Label précédente']}, {week})"
-        )
+        rfc = "" if pd.isna(rfc) else str(rfc)
+        label = "" if pd.isna(label) else str(label)
 
-    inco["Version max semaine"] = inco.apply(format_max, axis=1)
+        return f"{v} ({rfc}, {label}, {week})"
+
     inco["Version max précédente"] = inco.apply(format_prev, axis=1)
 
-    # -------------------------
-    # Colonnes affichées
-    # -------------------------
-    display_cols = [
-        "Composant",
-        "Semaine concernée",
-        "RFC",
-        "Version max semaine",
-        "Version max précédente",
+    # colonnes affichées
+    result = inco[
+        [
+            "Application",
+            "Version",
+            "RFC",
+            "Label",
+            "Semaine cible",
+            "Semaine",
+            "Version max semaine",
+            "Version max précédente",
+        ]
     ]
 
-    display_cols = [c for c in display_cols if c in inco.columns]
+    st.dataframe(result, use_container_width=True)
 
-    styled = inco[display_cols]
-
-    # -------------------------
-    # Couleurs
-    # -------------------------
-    def color_versions(val):
-
-        if isinstance(val, str):
-
-            if val.startswith("⬆"):
-                return "color: green; font-weight:bold"
-
-            if val.startswith("⬇"):
-                return "color: red; font-weight:bold"
-
-        return ""
-
-    st.dataframe(
-        styled.style.applymap(
-            color_versions,
-            subset=["Version max semaine", "Version max précédente"],
-        ),
-        use_container_width=True,
+    st.download_button(
+        "📥 Télécharger les incohérences",
+        result.to_csv(index=False).encode("utf-8"),
+        "incoherences.csv",
+        "text/csv"
     )
