@@ -27,17 +27,25 @@ def show(df):
         return
 
     # -------------------------
-    # Conversion sécurisée semaine
+    # Sélection de la semaine de la version max
     # -------------------------
-    if "Semaine concernée" in inco.columns:
-        def safe_int(x):
-            try:
-                return int(float(x))
-            except (ValueError, TypeError):
-                return pd.NA
-        inco["Semaine concernée"] = inco["Semaine concernée"].apply(safe_int)
+    def get_max_week(row):
+        return row.get("Semaine max version", pd.NA)
 
+    if "Semaine max version" not in inco.columns:
+        # assigner la semaine de la version max (correspond à Version max semaine)
+        inco["Semaine max version"] = inco.apply(
+            lambda row: row.get("Semaine précédente", pd.NA) if pd.isna(row.get("Semaine concernée", pd.NA)) else row.get("Semaine concernée", pd.NA),
+            axis=1
+        )
+
+    # convertir semaine en entier
+    inco["Semaine max version"] = inco["Semaine max version"].apply(lambda x: int(float(x)) if pd.notna(x) else pd.NA)
+    inco["Semaine concernée"] = inco["Semaine max version"]
+
+    # -------------------------
     # Assurer colonnes précédentes
+    # -------------------------
     for col in ["RFC précédente", "Label précédente", "Semaine précédente"]:
         if col not in inco.columns:
             inco[col] = ""
