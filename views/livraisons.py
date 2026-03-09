@@ -5,8 +5,8 @@ def show(df):
     st.title("Livraisons")
     df = filter_by_week(df)
     df = keep_highest_version_per_rfc_composant(df)
-    choix = st.multiselect("Choisir livraison", sorted(df["Label"].unique()))
+    choix = st.multiselect("Choisir livraison", sorted(df["Label Livraison affecté"].unique()))
     if choix:
-        df = df[df["Label"].isin(choix)]
+        df = df[df["LLabel Livraison affectéabel"].isin(choix)]
     st.dataframe(df,use_container_width=True)
 
